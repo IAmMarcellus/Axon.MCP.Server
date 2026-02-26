@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     azuredevops_password: Optional[str] = None  # Password or Personal Access Token (PAT)
     azuredevops_project: Optional[str] = None  # Optional: Only for test scripts, repositories store their own project names
     azuredevops_use_ntlm: bool = True  # Enable NTLM authentication for Azure DevOps
-    azuredevops_ssl_verify: bool = False  # SSL verification for self-hosted instances
+    azuredevops_ssl_verify: bool = True  # Keep TLS verification on by default; disable only for trusted self-signed environments
 
     # Database
     database_url: str
@@ -84,7 +84,7 @@ class Settings(BaseSettings):
     api_port: int = 8080
     api_workers: int = 4
     api_secret_key: str
-    api_cors_origins: list[str] = ["*"]
+    api_cors_origins: list[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
     api_rate_limit: int = 100
 
     # Security
@@ -92,7 +92,7 @@ class Settings(BaseSettings):
     admin_api_key: str = ""  # Main admin API key
     read_only_api_keys: list[str] = []  # List of read-only keys
     admin_password: str = ""  # Password for UI login (cookie-based)
-    mcp_auth_enabled: bool = False  # Disable MCP auth by default for compatibility
+    mcp_auth_enabled: bool = True  # Secure-by-default for MCP HTTP transport; override only for trusted local clients
 
     jwt_secret_key: str
     jwt_algorithm: str = "HS256"

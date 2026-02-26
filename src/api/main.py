@@ -45,10 +45,13 @@ limiter = get_limiter()
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+_cors_origins = get_settings().api_cors_origins
+_cors_has_wildcard = "*" in _cors_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=get_settings().api_cors_origins,
-    allow_credentials=True,
+    allow_origins=_cors_origins,
+    allow_credentials=not _cors_has_wildcard,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -94,6 +97,13 @@ async def _internal_error_handler(request: Request, exc: Exception):
 @app.on_event("startup")
 async def _startup() -> None:
     logger.info("application_startup", environment=get_settings().environment)
+
+    if "*" in get_settings().api_cors_origins:
+        logger.warning(
+            "cors_wildcard_configured",
+            message="API_CORS_ORIGINS contains '*'; credentialed browser requests are disabled by design. "
+                    "Set explicit origins to enable cookies/auth headers in browsers."
+        )
     
     # Validate auth configuration
     if get_settings().auth_enabled:
@@ -104,6 +114,14 @@ async def _startup() -> None:
                         "Set ADMIN_API_KEY or disable auth with AUTH_ENABLED=false"
             )
     
+    # Validate MCP HTTP auth posture
+    if get_settings().mcp_transport == "http" and not get_settings().mcp_auth_enabled:
+        logger.warning(
+            "mcp_http_auth_disabled",
+            message="MCP HTTP transport is running without MCP auth. This should only be used for trusted local development. "
+                    "Set MCP_AUTH_ENABLED=true for shared or network-exposed deployments."
+        )
+
     # Validate JWT configuration
     if not get_settings().jwt_secret_key:
         logger.error(
