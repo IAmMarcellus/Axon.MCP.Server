@@ -62,6 +62,29 @@ def helper(name: str) -> str:
     assert names["CONSTANT_VALUE"].kind == SymbolKindEnum.CONSTANT
 
 
+def test_python_parser_handles_module_annotated_assignments_and_all_augmentation():
+    parser = PythonParser()
+    code = '''
+__all__ = ["BASE"]
+__all__ += ["EXTRA"]
+
+BASE: int = 1
+EXTRA: str
+_runtime_flag: bool = False
+'''
+
+    result = parser.parse(code, "annotated.py")
+
+    assert result.success
+    assert "BASE" in result.exports
+    assert "EXTRA" in result.exports
+
+    names = {s.name: s for s in result.symbols}
+    assert names["BASE"].kind == SymbolKindEnum.CONSTANT
+    assert names["EXTRA"].kind == SymbolKindEnum.CONSTANT
+    assert names["_runtime_flag"].kind == SymbolKindEnum.VARIABLE
+
+
 def test_python_parser_handles_syntax_error_without_crashing():
     parser = PythonParser()
     result = parser.parse("def broken(:\n    pass\n", "broken.py")

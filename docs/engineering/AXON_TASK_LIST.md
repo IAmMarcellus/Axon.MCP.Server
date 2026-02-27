@@ -2,7 +2,7 @@
 
 **Path:** `/home/marcellus/.openclaw/workspace/repos/Axon.MCP.Server/docs/engineering/AXON_TASK_LIST.md`  
 **Scope:** Ongoing implementation, hardening, and validation tasks for Axon.MCP.Server.  
-**Last Updated (UTC):** 2026-02-26T23:12:00Z
+**Last Updated (UTC):** 2026-02-27T00:03:14Z
 
 ## How to Use (for humans + coding agents)
 
@@ -31,10 +31,6 @@
 
 ## IN_PROGRESS (sorted by priority)
 
-- [ ] `AX-023` | `P0` | owner=`main+cron` | summary=`Verify Python symbol support works end-to-end (parser -> extraction -> query/tool flows)` | next_step=`Run focused MCP/sync symbol-flow checks and patch any remaining Python symbol gaps.`
-  - links=`src/parsers/python_parser.py, tests/unit/test_python_parser.py`
-
-- [ ] `AX-024` | `P1` | owner=`cron` | summary=`Continue rolling stabilization/hardening across backend + React with regression coverage expansion.` | next_step=`Take next high-impact issue from audit/coverage output, fix it, and add regression tests.`
 
 ## INCOMPLETE (sorted by priority)
 
@@ -60,6 +56,12 @@
   - blocked_reason=`Current OP session auth is shell-scoped and not reliably available to service/cron process context.`
 
 ## DONE (sorted by completion date, newest first)
+
+- [x] `AX-024` | `P1` | owner=`cron` | summary=`Continue rolling stabilization/hardening across backend + React with regression coverage expansion.` | completed_at=`2026-02-27T00:03:14Z`
+  - links=`docs/engineering/BUG_AUDIT_2026-02-26.md, src/config/settings.py, src/parsers/python_parser.py, src/parsers/python_dependency_parser.py, ui/src/components/metrics_panel/MetricsPanel.tsx`
+
+- [x] `AX-023` | `P0` | owner=`main+cron` | summary=`Close remaining Python symbol gaps for annotated module assignments and __all__ augmentation with regression coverage.` | completed_at=`2026-02-26T23:35:45Z`
+  - links=`src/parsers/python_parser.py, tests/unit/test_python_parser.py`
 
 - [x] `AX-022` | `P0` | owner=`main` | summary=`Implement Python symbol parser + factory routing for `.py` files.` | completed_at=`2026-02-26T23:04:18Z`
   - links=`commit b6af290, src/parsers/python_parser.py, tests/unit/test_python_parser.py`

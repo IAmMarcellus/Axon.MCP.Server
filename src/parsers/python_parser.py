@@ -132,21 +132,23 @@ class _PythonAstVisitor(ast.NodeVisitor):
         if not self.class_stack and self._is_module_level(node):
             for target in node.targets:
                 if isinstance(target, ast.Name):
-                    var_name = target.id
-                    self.symbols.append(
-                        ParsedSymbol(
-                            kind=SymbolKindEnum.CONSTANT if var_name.isupper() else SymbolKindEnum.VARIABLE,
-                            name=var_name,
-                            start_line=node.lineno,
-                            end_line=getattr(node, 'end_lineno', node.lineno),
-                            start_column=getattr(node, 'col_offset', 0),
-                            end_column=self._end_column(node),
-                            signature=f"{var_name} = ...",
-                            documentation=None,
-                            access_modifier=self._access_modifier_for_name(var_name),
-                            fully_qualified_name=var_name,
-                        )
-                    )
+                    self._record_module_symbol(target.id, node)
+
+        self.generic_visit(node)
+
+    def visit_AnnAssign(self, node: ast.AnnAssign):
+        # Handle module-level annotated assignments (e.g., FOO: int = 1)
+        if self._is_module_level(node) and isinstance(node.target, ast.Name):
+            self._record_module_symbol(node.target.id, node)
+
+        self.generic_visit(node)
+
+    def visit_AugAssign(self, node: ast.AugAssign):
+        # Export extraction via __all__ += [...]
+        if isinstance(node.target, ast.Name) and node.target.id == '__all__':
+            extracted = self._extract_all_exports(node.value)
+            if extracted:
+                self.exports.extend(extracted)
 
         self.generic_visit(node)
 
@@ -178,6 +180,22 @@ class _PythonAstVisitor(ast.NodeVisitor):
                 access_modifier=self._access_modifier_for_name(func_name),
                 parent_name=parent_name,
                 fully_qualified_name=fully_qualified_name,
+            )
+        )
+
+    def _record_module_symbol(self, var_name: str, node: ast.AST):
+        self.symbols.append(
+            ParsedSymbol(
+                kind=SymbolKindEnum.CONSTANT if var_name.isupper() else SymbolKindEnum.VARIABLE,
+                name=var_name,
+                start_line=getattr(node, 'lineno', 1),
+                end_line=getattr(node, 'end_lineno', getattr(node, 'lineno', 1)),
+                start_column=getattr(node, 'col_offset', 0),
+                end_column=self._end_column(node),
+                signature=f"{var_name} = ...",
+                documentation=None,
+                access_modifier=self._access_modifier_for_name(var_name),
+                fully_qualified_name=var_name,
             )
         )
 
