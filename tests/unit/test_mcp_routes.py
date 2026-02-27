@@ -84,3 +84,49 @@ def test_mcp_test_search_code_endpoint(monkeypatch):
     payload = response.json()
     assert payload["isError"] is False
     assert payload["content"][0]["text"] == "ok"
+
+
+def test_mcp_test_get_symbol_context_endpoint(monkeypatch):
+    app = _build_app((mcp_test_router, "/api/v1"))
+    client = TestClient(app)
+
+    async def _fake_get_symbol_context(**kwargs):
+        assert kwargs["symbol_id"] == 41
+        assert kwargs["include_relationships"] is True
+        return [_Content(type="text", text="python symbol context")]
+
+    import src.mcp_server.tools.symbols as symbol_tools
+
+    monkeypatch.setattr(symbol_tools, "get_symbol_context", _fake_get_symbol_context)
+
+    response = client.post(
+        "/api/v1/mcp/tools/get_symbol_context",
+        json={"symbol_id": 41, "include_relationships": True},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["isError"] is False
+    assert payload["content"][0]["text"] == "python symbol context"
+
+
+def test_mcp_test_get_symbol_context_endpoint_handles_tool_error(monkeypatch):
+    app = _build_app((mcp_test_router, "/api/v1"))
+    client = TestClient(app)
+
+    async def _fake_get_symbol_context(**kwargs):
+        raise RuntimeError("symbol lookup failed")
+
+    import src.mcp_server.tools.symbols as symbol_tools
+
+    monkeypatch.setattr(symbol_tools, "get_symbol_context", _fake_get_symbol_context)
+
+    response = client.post(
+        "/api/v1/mcp/tools/get_symbol_context",
+        json={"symbol_id": 41, "include_relationships": False},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["isError"] is True
+    assert "symbol lookup failed" in payload["content"][0]["text"]
