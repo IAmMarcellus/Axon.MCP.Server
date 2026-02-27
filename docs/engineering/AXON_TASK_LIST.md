@@ -2,7 +2,7 @@
 
 **Path:** `/home/marcellus/.openclaw/workspace/repos/Axon.MCP.Server/docs/engineering/AXON_TASK_LIST.md`  
 **Scope:** Ongoing implementation, hardening, and validation tasks for Axon.MCP.Server.  
-**Last Updated (UTC):** 2026-02-27T00:03:14Z
+**Last Updated (UTC):** 2026-02-27T03:55:54Z
 
 ## How to Use (for humans + coding agents)
 
@@ -31,18 +31,29 @@
 
 ## IN_PROGRESS (sorted by priority)
 
+- [ ] `AX-035` | `P0` | owner=`main+cron` | summary=`Raise coverage in high-risk low-coverage API routes and worker pipeline modules.` | next_step=`Continue route/worker coverage sweep after newly added MCP route tests; next target set: auth, repositories, symbols, search, workers/statistics, and sync pipeline.`
+  - links=`tests/unit/test_mcp_routes.py, src/api/routes/mcp_http.py, src/api/routes/mcp_test.py`
 
 ## INCOMPLETE (sorted by priority)
 
 - [ ] `AX-025` | `P0` | owner=`main` | summary=`Curate, commit, and push the current stabilization working tree safely in logical commits.` | next_step=`Split changes by concern (parser/security/ui/tests), commit, push, and update PR/summary.`
 
-- [ ] `AX-026` | `P1` | owner=`main+cron` | summary=`Increase coverage for low-coverage API routes and worker pipeline steps touched by stabilization.` | next_step=`Add targeted route + worker tests for highest-risk paths and re-run full pytest.`
+- [ ] `AX-037` | `P1` | owner=`main+cron` | summary=`Retire or isolate legacy src/mcp_server/server_old.py from active runtime/test path.` | next_step=`Confirm no runtime references, move to archival location or guarded legacy module, and validate import/test behavior.`
 
-- [ ] `AX-027` | `P1` | owner=`main+cron` | summary=`Add integration-level regression coverage specifically for Python symbol workflows (search/navigation/use-cases).` | next_step=`Add tests that assert Python symbols are discoverable and queryable after ingestion.`
+- [ ] `AX-043` | `P1` | owner=`main+cron` | summary=`Expand Python symbol end-to-end verification through ingestion and query surfaces.` | next_step=`Add API/MCP-level tests asserting Python symbols remain discoverable via symbols/search/mcp flows after sync.`
 
-- [ ] `AX-028` | `P2` | owner=`cron` | summary=`Reduce remaining project-controlled UTC/deprecation warning sources.` | next_step=`Sweep project modules for residual datetime.utcnow() usage and migrate safely.`
+- [ ] `AX-028` | `P2` | owner=`cron` | summary=`Reduce remaining project-controlled UTC/deprecation warning sources.` | next_step=`Continue sweeping project modules for residual datetime.utcnow() usage; auth token path now migrated to timezone-aware UTC.`
 
-- [ ] `AX-029` | `P3` | owner=`main+cron` | summary=`Run dedicated React lint-hardening sweep across pre-existing UI lint debt.` | next_step=`Fix high-signal lint issues first (hooks deps, a11y, explicit-any, unused vars) and keep build/tests green.`
+- [ ] `AX-038` | `P2` | owner=`main+cron` | summary=`Refactor oversized hotspots into smaller composable modules (parser/extractor/service layers).` | next_step=`Start with highest-maintenance modules (csharp_parser, javascript_parser, link_service, knowledge_extractor) and split by concern with regression safety nets.`
+
+- [ ] `AX-039` | `P2` | owner=`main+cron` | summary=`Close tracked functional TODOs in critical analysis paths.` | next_step=`Implement TODOs for call-graph signature matching, sync progress Redis persistence, and chunk-context import persistence.`
+
+- [ ] `AX-040` | `P2` | owner=`main+cron` | summary=`Implement React route-level code splitting to improve initial load performance.` | next_step=`Lazy-load page routes, re-check bundle composition, and verify test/build/runtime behavior.`
+
+- [ ] `AX-041` | `P3` | owner=`main+cron` | summary=`Create and execute staged dependency modernization plan (backend + UI).` | next_step=`Upgrade in controlled tranches with compatibility matrix and CI gate at each tranche.`
+
+- [ ] `AX-042` | `P3` | owner=`main+cron` | summary=`Resolve remaining non-blocking UI lint warnings and keep lint baseline clean.` | next_step=`Fix axios advisory path and enforce warning budget in CI.`
+
 
 ## BLOCKED (sorted by priority)
 
@@ -56,6 +67,24 @@
   - blocked_reason=`Current OP session auth is shell-scoped and not reliably available to service/cron process context.`
 
 ## DONE (sorted by completion date, newest first)
+
+- [x] `AX-036` | `P1` | owner=`main` | summary=`Reduce API startup/import overhead by deferring heavy MCP tool imports and avoiding eager MCP HTTP server coupling.` | completed_at=`2026-02-27T03:53:54Z`
+  - links=`src/api/main.py, src/api/routes/mcp_test.py, src/api/routes/mcp_http.py`
+
+- [x] `AX-034` | `P1` | owner=`subagent-91dbe2e2` | summary=`Harden JWT access-token expiry to timezone-aware UTC and add regression coverage for expiration semantics.` | completed_at=`2026-02-27T03:32:21Z`
+  - links=`src/api/auth.py, tests/unit/test_auth.py`
+
+- [x] `AX-029` | `P3` | owner=`cron` | summary=`Run dedicated React lint-hardening sweep across pre-existing UI lint debt.` | completed_at=`2026-02-27T03:09:10Z`
+  - links=`ui/src/components/azuredevops_discovery/AzureDevOpsDiscoveryModal.tsx, ui/src/components/gitlab_discovery/GitLabDiscoveryModal.tsx, ui/src/pages/jobs/JobsPage.tsx, ui/src/pages/login/LoginPage.tsx, ui/src/pages/mcp_test/MCPTestPage.tsx, ui/src/pages/repository_detail/RepositoryDetailPage.tsx, ui/src/components/Repository/AnalysisResults.tsx, ui/src/pages/repositories/RepositoriesPage.tsx`
+
+- [x] `AX-033` | `P1` | owner=`subagent-242a9ff2` | summary=`Stabilization pass: harden Python data validation and React modal runtime accessibility with regression coverage.` | completed_at=`2026-02-27T02:37:40Z`
+  - links=`src/utils/data_validation.py, tests/unit/test_data_validation.py, ui/src/components/confirmation_modal/ConfirmationModal.tsx, ui/src/components/confirmation_modal/ConfirmationModal.module.css, ui/src/components/confirmation_modal/ConfirmationModal.test.tsx`
+
+- [x] `AX-027` | `P1` | owner=`cron` | summary=`Add integration-level regression coverage specifically for Python symbol workflows (search/navigation/use-cases).` | completed_at=`2026-02-27T02:07:00Z`
+  - links=`tests/integration/test_python_symbol_workflow.py, tests/unit/test_symbol_service.py, src/api/services/symbol_service.py`
+
+- [x] `AX-026` | `P1` | owner=`subagent-97b27fde` | summary=`Increase coverage for low-coverage API routes and worker pipeline steps touched by stabilization.` | completed_at=`2026-02-27T01:06:56Z`
+  - links=`src/api/routes/jobs.py, src/workers/tasks.py, tests/unit/test_jobs_routes.py`
 
 - [x] `AX-024` | `P1` | owner=`cron` | summary=`Continue rolling stabilization/hardening across backend + React with regression coverage expansion.` | completed_at=`2026-02-27T00:03:14Z`
   - links=`docs/engineering/BUG_AUDIT_2026-02-26.md, src/config/settings.py, src/parsers/python_parser.py, src/parsers/python_dependency_parser.py, ui/src/components/metrics_panel/MetricsPanel.tsx`

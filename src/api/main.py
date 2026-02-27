@@ -14,7 +14,6 @@ from src.api.dependencies import get_limiter
 from src.api.routes.health import router as health_router
 from src.api.routes.auth import router as auth_router
 from src.api.routes.jobs import router as jobs_router
-from src.api.routes.mcp_http import router as mcp_http_router
 from src.api.routes.mcp_test import router as mcp_test_router
 from src.api.routes.repositories import router as repositories_router
 from src.api.routes.search import router as search_router
@@ -192,7 +191,13 @@ app.include_router(statistics_router, prefix="/api/v1", tags=["Statistics"])
 app.include_router(analysis_router, prefix="/api/v1", tags=["Analysis"])
 app.include_router(enrichment_router, prefix="/api/v1", tags=["Enrichment"])
 app.include_router(mcp_test_router, prefix="/api/v1", tags=["MCP Testing"])
+
 # MCP HTTP transport endpoint (no prefix - root level)
-app.include_router(mcp_http_router, tags=["MCP HTTP Transport"])
+# Import lazily only when HTTP transport is enabled to reduce API startup/import overhead
+# for the default stdio deployment mode.
+if settings.mcp_transport == "http":
+    from src.api.routes.mcp_http import router as mcp_http_router
+
+    app.include_router(mcp_http_router, tags=["MCP HTTP Transport"])
 
 
