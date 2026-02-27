@@ -2,7 +2,7 @@
 
 **Path:** `/home/marcellus/.openclaw/workspace/repos/Axon.MCP.Server/docs/engineering/AXON_TASK_LIST.md`  
 **Scope:** Ongoing implementation, hardening, and validation tasks for Axon.MCP.Server.  
-**Last Updated (UTC):** 2026-02-27T03:55:54Z
+**Last Updated (UTC):** 2026-02-27T05:10:02Z
 
 ## How to Use (for humans + coding agents)
 
@@ -31,16 +31,10 @@
 
 ## IN_PROGRESS (sorted by priority)
 
-- [ ] `AX-035` | `P0` | owner=`main+cron` | summary=`Raise coverage in high-risk low-coverage API routes and worker pipeline modules.` | next_step=`Continue route/worker coverage sweep after newly added MCP route tests; next target set: auth, repositories, symbols, search, workers/statistics, and sync pipeline.`
-  - links=`tests/unit/test_mcp_routes.py, src/api/routes/mcp_http.py, src/api/routes/mcp_test.py`
 
 ## INCOMPLETE (sorted by priority)
 
-- [ ] `AX-025` | `P0` | owner=`main` | summary=`Curate, commit, and push the current stabilization working tree safely in logical commits.` | next_step=`Split changes by concern (parser/security/ui/tests), commit, push, and update PR/summary.`
-
 - [ ] `AX-037` | `P1` | owner=`main+cron` | summary=`Retire or isolate legacy src/mcp_server/server_old.py from active runtime/test path.` | next_step=`Confirm no runtime references, move to archival location or guarded legacy module, and validate import/test behavior.`
-
-- [ ] `AX-043` | `P1` | owner=`main+cron` | summary=`Expand Python symbol end-to-end verification through ingestion and query surfaces.` | next_step=`Add API/MCP-level tests asserting Python symbols remain discoverable via symbols/search/mcp flows after sync.`
 
 - [ ] `AX-028` | `P2` | owner=`cron` | summary=`Reduce remaining project-controlled UTC/deprecation warning sources.` | next_step=`Continue sweeping project modules for residual datetime.utcnow() usage; auth token path now migrated to timezone-aware UTC.`
 
@@ -48,11 +42,7 @@
 
 - [ ] `AX-039` | `P2` | owner=`main+cron` | summary=`Close tracked functional TODOs in critical analysis paths.` | next_step=`Implement TODOs for call-graph signature matching, sync progress Redis persistence, and chunk-context import persistence.`
 
-- [ ] `AX-040` | `P2` | owner=`main+cron` | summary=`Implement React route-level code splitting to improve initial load performance.` | next_step=`Lazy-load page routes, re-check bundle composition, and verify test/build/runtime behavior.`
-
 - [ ] `AX-041` | `P3` | owner=`main+cron` | summary=`Create and execute staged dependency modernization plan (backend + UI).` | next_step=`Upgrade in controlled tranches with compatibility matrix and CI gate at each tranche.`
-
-- [ ] `AX-042` | `P3` | owner=`main+cron` | summary=`Resolve remaining non-blocking UI lint warnings and keep lint baseline clean.` | next_step=`Fix axios advisory path and enforce warning budget in CI.`
 
 
 ## BLOCKED (sorted by priority)
@@ -67,6 +57,24 @@
   - blocked_reason=`Current OP session auth is shell-scoped and not reliably available to service/cron process context.`
 
 ## DONE (sorted by completion date, newest first)
+
+- [x] `AX-025` | `P0` | owner=`main` | summary=`Curate, commit, and push the current stabilization working tree safely in logical commits.` | completed_at=`2026-02-27T05:10:02Z`
+  - links=`docs/engineering/STAGED_COMMIT_PLAN_2026-02-27.md`
+
+- [x] `AX-044` | `P2` | owner=`cron` | summary=`Harden React router tests for v7 forward-compatibility by opting into future flags and removing noisy warnings.` | completed_at=`2026-02-27T05:08:17Z`
+  - links=`ui/src/App.test.tsx`
+
+- [x] `AX-035` | `P0` | owner=`cron` | summary=`Raise coverage in high-risk low-coverage API routes and worker pipeline modules.` | completed_at=`2026-02-27T04:41:19Z`
+  - links=`tests/unit/test_incremental_sync.py, tests/unit/test_pipeline_context_step.py, src/workers/incremental_sync.py, src/workers/pipeline/context.py, src/workers/pipeline/step.py`
+
+- [x] `AX-043` | `P1` | owner=`cron` | summary=`Expand Python symbol end-to-end verification through ingestion and query surfaces.` | completed_at=`2026-02-27T04:39:02Z`
+  - links=`tests/unit/test_symbols_routes.py, tests/unit/test_mcp_routes.py, src/api/routes/symbols.py, src/api/routes/mcp_test.py`
+
+- [x] `AX-040` | `P2` | owner=`cron` | summary=`Implement React route-level code splitting to improve initial load performance.` | completed_at=`2026-02-27T04:39:02Z`
+  - links=`ui/src/App.tsx, ui/src/App.test.tsx, ui/package.json`
+
+- [x] `AX-042` | `P3` | owner=`cron` | summary=`Resolve remaining non-blocking UI lint warnings and keep lint baseline clean.` | completed_at=`2026-02-27T04:03:32Z`
+  - links=`ui/src/services/api.ts`
 
 - [x] `AX-036` | `P1` | owner=`main` | summary=`Reduce API startup/import overhead by deferring heavy MCP tool imports and avoiding eager MCP HTTP server coupling.` | completed_at=`2026-02-27T03:53:54Z`
   - links=`src/api/main.py, src/api/routes/mcp_test.py, src/api/routes/mcp_http.py`
